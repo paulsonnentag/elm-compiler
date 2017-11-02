@@ -3,16 +3,18 @@
 module Reporting.Warning where
 
 import Data.Aeson ((.=))
-import qualified Data.Aeson as Json
 import Data.Text (Text)
+import qualified Data.Aeson as Json
 
+import Data.Monoid (mempty)
+import Data.String
+import Reporting.Helpers ((<>), text)
 import qualified AST.Module.Name as ModuleName
 import qualified AST.Type as Type
 import qualified Reporting.Annotation as A
-import qualified Reporting.Report as Report
-import qualified Reporting.Render.Type as RenderType
 import qualified Reporting.Helpers as Help
-import Reporting.Helpers ((<>), text)
+import qualified Reporting.Render.Type as RenderType
+import qualified Reporting.Report as Report
 
 
 
@@ -22,6 +24,8 @@ import Reporting.Helpers ((<>), text)
 data Warning
     = UnusedImport ModuleName.Raw
     | MissingTypeAnnotation Text Type.Canonical
+    | TopLevelBinding Text
+    | ExternalBinding Text String
 
 
 
@@ -37,7 +41,20 @@ toReport localizer warning =
           Nothing
           ("Module `" <> ModuleName.toText moduleName <> "` is unused.")
           (text "Best to remove it. Don't save code quality for later!")
-
+    TopLevelBinding name ->
+        Report.report
+          "toplevel value"
+          Nothing
+          ("Top-level value " <> Help.functionName name <> " exists!!")
+          ( mempty
+          )
+    ExternalBinding name mod ->
+        Report.report
+          "external value"
+          Nothing
+          ("External value " <> Help.functionName name <> " exists!!" <> fromString mod)
+          ( mempty
+          )
     MissingTypeAnnotation name inferredType ->
         Report.report
           "missing type annotation"

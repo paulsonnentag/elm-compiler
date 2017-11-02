@@ -53,9 +53,7 @@ Library
         Elm.Compiler.Type,
         Elm.Docs,
         Elm.Package,
-        Elm.Utils
-
-    other-modules:
+        Elm.Utils,
         AST.Declaration,
         AST.Effects,
         AST.Expression.Canonical,
@@ -134,7 +132,9 @@ Library
         Type.State,
         Type.Type,
         Type.Unify,
-        Validate,
+        Validate
+
+    other-modules:
         Paths_elm_compiler
 
     Build-depends:

@@ -10,14 +10,16 @@ http://moscova.inria.fr/~maranget/papers/warn/warn.pdf
 -}
 
 import Control.Arrow ((***), second)
+import Data.Text (Text)
 import qualified Data.Foldable as F
 import qualified Data.List as List
 import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
 import qualified Data.Set as Set
 import qualified Data.Text as Text
-import Data.Text (Text)
 
+import Elm.Utils ((|>))
+import Nitpick.Pattern (Pattern(..), fromCanonicalPattern)
 import qualified AST.Expression.Canonical as C
 import qualified AST.Helpers as Help
 import qualified AST.Literal as L
@@ -25,8 +27,6 @@ import qualified AST.Module as Module
 import qualified AST.Module.Name as ModuleName
 import qualified AST.Pattern as Pattern
 import qualified AST.Variable as Var
-import Elm.Utils ((|>))
-import Nitpick.Pattern (Pattern(..), fromCanonicalPattern)
 import qualified Optimize.DecisionTree as DT
 import qualified Reporting.Annotation as A
 import qualified Reporting.Error.Pattern as Error
@@ -92,7 +92,7 @@ checkExpression arityDict (A.A region expression) =
         go body
           <* F.traverse_ goDef defs
       where
-        goDef (C.Def _ pattern@(A.A patRegion _) expr _) =
+        goDef (C.Def rg pattern@(A.A patRegion _) expr _) =
             checkPatterns arityDict patRegion Error.LetBound [pattern]
             <* go expr
 

@@ -4,12 +4,14 @@ module Canonicalize.Setup (environment) where
 
 import Control.Arrow (second)
 import Control.Monad (foldM)
+import Data.Monoid ((<>))
+import Data.Text (Text)
 import qualified Data.Graph as Graph
 import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
-import Data.Monoid ((<>))
-import Data.Text (Text)
 
+import Canonicalize.Variable (Result)
+import Elm.Utils ((|>))
 import qualified AST.Declaration as D
 import qualified AST.Effects as Effects
 import qualified AST.Expression.Source as Src
@@ -18,15 +20,13 @@ import qualified AST.Module.Name as ModuleName
 import qualified AST.Pattern as P
 import qualified AST.Type as Type
 import qualified AST.Variable as Var
-import Elm.Utils ((|>))
+import qualified Canonicalize.Environment as Env
+import qualified Canonicalize.Type as Canonicalize
 import qualified Reporting.Annotation as A
 import qualified Reporting.Error.Canonicalize as Error
 import qualified Reporting.Helpers as Help (nearbyNames)
 import qualified Reporting.Region as R
 import qualified Reporting.Result as Result
-import qualified Canonicalize.Environment as Env
-import qualified Canonicalize.Type as Canonicalize
-import Canonicalize.Variable (Result)
 
 
 
